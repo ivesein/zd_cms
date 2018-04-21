@@ -30,20 +30,21 @@ export default {
       var um_v = um.value;
       var pw_v = pw.value;
       console.log(typeof pw_v)
-      if(um_v === "冯荷蕾" && pw_v === "123456"){
+      if(um_v === "f" && pw_v === "1"){
          
               this.$message({
               message: `登录成功，2秒后跳转！`,
-              type: 'success'}
+              type: 'success',
+              duration:1000}
             );
         setTimeout(() => {
           // clearInterval(itimer);
-          this.$router.push('/Hello');
+          this.$router.push('/Home');
         },2000)
    
       }else{
-          this.$message.error(
-           '用户名或密码错误！请重新输入'
+          this.$message.error({message:'用户名或密码错误！请重新输入', duration:1000}
+           
           )
       }
     }
