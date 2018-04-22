@@ -19,7 +19,7 @@
           </template>
           <el-menu-item index="customerinfo">客户信息查询</el-menu-item>
           <el-menu-item index="orderinfo">订单信息查询</el-menu-item>
-          <el-menu-item index="someinfo">其它信息查询</el-menu-item>
+          <el-menu-item index="someinfo" >其它信息查询</el-menu-item>
         </el-submenu>
         <el-menu-item index="addorder">
           <i class="iconfont icon-tianjiaxinxi"></i>
@@ -34,6 +34,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
+
 export default {
   data() {
     return {
@@ -42,6 +44,15 @@ export default {
   },
   components: {
 
+  },
+  methods:{
+    // ...mapActions(['getOrderData']),
+    // show(){
+    //   console.log('点击了按钮')
+    // }
+  },
+  mounted(){
+    // console.log(this.$store);
   }
 }
 </script>

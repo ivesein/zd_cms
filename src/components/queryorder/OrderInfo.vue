@@ -8,13 +8,17 @@
                 :data="goodData"
                 style="width: 100%"
                 :row-class-name="tableRowClassName"
+                v-loading="tbLoading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
               >
                 <el-table-column
                   align="center"
                   prop="date"
                   label="日期"
                   sortable
-                  width="120"
+                  width="100"
                   :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
                   :filter-method="filterHandler"
                 >
@@ -45,7 +49,7 @@
                   align="center"
                   prop="Laboratory"
                   label="楼/科室"
-                  width="140">
+                  width="120">
                 </el-table-column>
                 <el-table-column
                 align="center"
@@ -66,7 +70,7 @@
                 align="center"
                   prop="email"
                   label="邮箱"
-                  width="160">
+                  width="200">
                 </el-table-column>
                 <el-table-column
                 align="center"
@@ -79,8 +83,8 @@
                 align="center"
                   prop="tag"
                   label="标签"
-                  width="80"
-                  :filters="[{ text: '测序', value: '测序' }, { text: '引物合成', value: '引物合成' }]"
+                  width="100"
+                  :filters="[{ text: '基因测序', value: '基因测序' }, { text: '引物合成', value: '引物合成' }]"
                   :filter-method="filterTag"
                   filter-placement="bottom-end">
                   <template slot-scope="scope">
@@ -99,7 +103,7 @@
                 align="center"
                   prop="orderNumber"
                   label="数量"
-                  width="70">
+                  width="60">
                 </el-table-column>
                 <el-table-column label="价格合计" align="center" width="90">
                   <template slot-scope="scope">{{parseInt(scope.row.price)*parseInt(scope.row.orderNumber)}}</template>
@@ -141,19 +145,18 @@
 
 <script type="text/ecmascript-6">
 import ContentTitle from '@/components/common/content/ContentTitle'
-
+// import store from '../../../store/store'
+import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
 
 export default {
   data() {
-    return {
-      //表格当前页数据
-      tableData: [],              
+    return {              
       //搜索条件
       criteria: '',
       //下拉菜单选项
       select: '',
       //默认每页数据量
-      pagesize: 3,
+      pagesize: 10,
       //默认高亮行数据id
       highlightId: -1,
       //当前页码
@@ -161,129 +164,17 @@ export default {
       //查询的页码
       start: 1,
       //默认数据总数
-      totalCount: 100,
-      goodData:[],
-      tableData: [{
-          date: '2018-04-02',
-          name: '王小虎',
-          school:'西安交大生科院',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'牛二',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: ' 陕西省西安市咸宁西路28号',
-          tag: '测序',
-          price:'16',
-          orderNumber:'16',
-          progress:true
+      totalCount: 0,
 
-        }, {
-          date: '2018-03-04',
-          name: '李小狗',
-          school:'陕师大',
-          Laboratory:'实验楼3楼303室',
-          leaderName:'猪三',
-          phone:'13891445896',
-          email:'223412345@qq.com',
-          address: '陕西省西安市长安区西长安街620号',
-          tag: '引物合成',
-          price:'18',
-          orderNumber:'6',
-          progress:false 
-        }, {
-          date: '2018-04-01',
-          name: '刘小鸡',
-          school:'西工大',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'狗四',
-          phone:'13894456433',
-          email:'1123dxd45@qq.com',
-          address: '陕西省西安市咸宁西路28号',
-          tag: '测序',
-          price:'18',
-          orderNumber:'11',
-          progress:true          
-        }, {
-          date: '2017-12-03',
-          name: '王小虎',
-          school:'西安交大生科院',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'狗四',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市咸宁西路28号',
-          tag: '引物合成',
-          price:'16',
-          orderNumber:'14',
-          progress:false          
-        }, {
-          date: '2017-12-03',
-          name: '王小虎',
-          school:'陕师大',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'牛二',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市咸宁西路28号',
-          tag: '测序',
-          price:'16',
-          orderNumber:'15',
-          progress:false
-        }, {
-          date: '2018-03-03',
-          name: '王小虎',
-          school:'西工大',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'猪三',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市长安区西长安街620号',
-          tag: '引物合成',
-          price:'14',
-          orderNumber:'15',
-          progress:true
-        }, {
-          date: '2018-04-03',
-          name: '王小虎',
-          school:'唐都医院',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'猪三',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市长安区西长安街620号',
-          tag: '引物合成',
-          price:'18',
-          orderNumber:'15',
-          progress:false
-        }, {
-          date: '2018-04-03',
-          name: '赵小猫',
-          school:'西京医院',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'狗四',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市长安区西长安街620号',
-          tag: '测序',
-          price:'18',
-          orderNumber:'9',
-          progress:true
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',school:'西安交大生科院',
-          Laboratory:'实验楼2楼203室',
-          leaderName:'牛二',
-          phone:'13891759137',
-          email:'112345@qq.com',
-          address: '陕西省西安市咸宁西路28号',
-          tag: '引物合成',
-          price:'16',
-          orderNumber:'20',
-          progress:false
-        }]
+      //loading标识
+      tbLoading:1,
+
+      goodData:[],
+      
     }
   },
   methods:{
+    
      formatter(row, column) {
         return row.address;
       },
@@ -303,8 +194,10 @@ export default {
       },
       //渲染数据
       renderData(){
-          this.tableData.forEach((v,k) => {
-            if(k >= (this.currentPage-1)*3 && k <= this.currentPage*3-1){
+        this.tbLoading=0;
+        this.totalCount=this.$store.state.orderData.length;
+        this.$store.state.orderData.forEach((v,k) => {
+            if(k >= (this.currentPage-1)*this.pagesize && k <= this.currentPage*this.pagesize-1){
               this.goodData.push(v);
             }
           })
@@ -330,7 +223,9 @@ export default {
       //每页显示数据量变更
       handleSizeChange: function(val) {
           this.pagesize = val;
-          this.loadData(this.criteria, this.currentPage, this.pagesize);
+          this.goodData=[];
+          this.renderData();
+          // this.loadData(this.criteria, this.currentPage, this.pagesize);
       },
 
       //页码变更
@@ -358,8 +253,15 @@ export default {
         this.renderData();
       }     
   },
+  created(){
+    //分发actions中的getOrderData方法请求数据，回掉renderData函数渲染goodData数组内容
+    this.$store.dispatch('getOrderData',this.renderData);
+    
+    
+  },
   mounted(){
-    this.renderData();
+    // console.log($store)
+  
   },
   components: {
       ContentTitle
