@@ -11,10 +11,7 @@ Mock.Random.extend({
         return this.pick(leaderName);
     },
     address: function() {
-        var address = [
-            "陕西省西安市咸宁西路28号",
-            "陕西省西安市长安区西长安街620号"
-        ];
+        var address = ["陕西省西安市咸宁西路28号", "陕西省西安市长安区西长安街620号"];
         return this.pick(address);
     },
     sequencePrice: function() {
