@@ -425,7 +425,7 @@ export default {
     background: #f0f9eb;
   }
   .el-popover__title{
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
     color:#67C23A!important;
     padding-bottom: 5px;
   }

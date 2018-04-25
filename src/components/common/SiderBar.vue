@@ -23,7 +23,7 @@
         </el-submenu>
         <el-menu-item index="addorder">
           <i class="iconfont icon-tianjiaxinxi"></i>
-          <span slot="title">添加订单</span>
+          <span slot="title">添加信息</span>
         </el-menu-item>
         <el-menu-item index="summaryorder">
           <i class="iconfont icon-daohang-shujufenxi"></i>
